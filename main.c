@@ -1,5 +1,3 @@
-/**AUTHORS: Sam Whitlock (ee40-il), Andrew Popov (ee40-bg)*/
-
 #include "io430.h"
 
 /* key to ports
