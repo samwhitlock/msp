@@ -1,0 +1,62 @@
+This file is part of asdp.
+
+asdp is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+asdp is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with asdp.  If not, see <http://www.gnu.org/licenses/>.
+
+                       The CS61B Drawing System
+                      Users' Guide and Reference
+
+                           *Sam Whitlock*
+
+The Drawing System provides an interface to translate simple LISP expressions into their equivalent postscript output.
+
+The following mathematical operations in LISP may be used N levels deep:
+-addition
+-subtraction
+-multiplication
+-division
+-sin
+-cos
+-sqrt
+
+Assignment statements may also be used 1 level deep.
+
+Number values may be signed or unsigned integers or real numbers. The
+exponential format may also be used, denoted by NeM, which translates
+to N times 10 raised to the Mth power.
+
+PostScript provides and easy way to describe shapes in an output
+space. This Drawing System uses a simple version LISP to create
+PostScript output. The user may "paint a picture" by creating and
+translating basic shapes in a LISP representation, and the Drawing
+System will parse them into PostScript and execute them if the user
+desires.
+
+When executing the Drawing System in the Java Virtual Machine, you may
+use execute the program with an input file and have it write to an
+output file, or, if no output file is specified, the Drawing System
+will execute the LISP expression in the input file. If the "-"
+character is used in either the location for the input file or for the
+output file, the program will write to Standard Input or Standard
+Output if it is replaces either/both (of) the arguments for the input
+file or the output file.
+
+For drawing pictures, the user has several options to work with. They
+may drawing filled or unfilled circles and rectangles and
+lines. Additionally, they may adjust the parameters of color and line
+width to subsequent line commands (the initial color is
+black). Pictures may also be moved rotates and scaled. Also included
+is the control structure of the for loop.
+
+If the Drawing System is executed without any arguments, a help dialog
+describing the commands is printed out to Standard Out for the user.

@@ -1,0 +1,102 @@
+This file is part of asdp.
+
+asdp is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+asdp is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with asdp.  If not, see <http://www.gnu.org/licenses/>.
+
+          An Implementor's Guide to the CS61B Drawing System
+                        *Sam Whitlock (cs61b-eo)*
+
+Discontinuities between the project spec and what I was able to implement
+
+-I was unable to implement recursive Groups. These are needed for
+ running spiral.drw. Initially I chose to leave the values associated
+ with my variables as Commands so that any variables contained therein
+ could be instantiated at their execution, rather than at their
+ creation. However, this created the ability for recursively defined
+ groups to cause a stack overflow (and some other horrendous
+ errors). I was unsure of how to change my implementation because I
+ need to keep the values as Command for the delayed evaluation.
+-I was unable to implement the ability to have the colors and line
+ widths stay associated with Pictures at the time of their creation. I
+ do have an implementation for it (as you can see in my picture
+ classes), but when I tried to set the colors and line widths to the
+ proper values before drawing the picture, it was considered invalid
+ input for some reason.
+-I WAS able to implement a rather handy feature in which assignment
+ statements are able to be used as Values (rather than just returning
+ null). This allowed for simultaneous assignment and mathematical
+ operations (if the assignment was of type Number/Literal).
+
+Representation of Commands
+
+Commands in the input language (LISP) are represented by Command
+Objects, which are each a specific types of command depending on the
+operator (the leading non-parenthetical term in a LISP
+expression). These Command objects have a list of operands upon which
+is successively acts upon when its execute method is called. The list
+is of type List from the Java Collections and any sort of sub-type of
+List may be used in whatever case is convenient.
+
+
+Representation of Values
+
+Values are represented by the abstract class Value, which holds a
+double value and a picture value. One may extend the output of
+commands by creating new extensions of the Value class. All commands
+output an instance of type Value.
+
+
+Representation of Pictures
+
+Each picture is represented by an instance of the Picture class, which
+extends the class Value. Each picture can be represented in its own
+custom way. For example, a circle picture is represented by its radius
+and its origin's X and Y offset from the lower left corner of the
+screen. However, these remain private because the only interfaces
+needed are to draw scale, translate, and rotate the picture. Those are
+the methods required to extend the abstract Picture class, and the
+internal representation of the Picture (or shape, if one prefers) is
+left up to the implementer.
+
+Representation of Variables
+
+Variables are represented as symbols, which are a type of Value. These
+can be used anywhere necessary, and only have their associated value
+retrieved when necessary (i.e. at execution time in most commands'
+execution method). All of these are stored in a HashMap in the
+instance of the Interpreter class. They the key is a string which the
+Symbol value is a wrapper for (and SymbolCommand is a wrapper for
+that) and the value returned is a command. It is necessary to return a
+command rather than a value so that the execution by these commands to
+produce these values is delayed as long as possible. Thus, we are
+provided with a representation of variables that allows us to use them
+as symbols when needed and only retrieve their values (or throw an
+applicable exception) when necessary.
+
+Input Parsing
+
+The LISP input is parsed in the class Interpreter. Mathematical
+expression may be indefinitely deep, while assignment statements may
+be only 1 level deep. The operands to draw commands that are
+mathematical expression may themselves be indefinitely deep, while the
+drawing and shape commands themselves may be just 1 level deep. The
+simple LISP expression are parsed to PostScript expression. These
+expression may be written out to a file or executed. When the Drawing
+System is initialized, the character "-" may be substituted in the
+spot for an input file to signal the program to take input from
+standard input, and the same character may also be used in the spot
+for the output file to signal to the program to write to the standard
+output. The Drawing System will also execute the interpreted LISP code
+if only the name of an input file is given.
+
+

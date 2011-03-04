@@ -1,0 +1,67 @@
+;See my note in INTERALS about how my project does not completely conform to the specs
+
+;Note: My for loops will not work recursively like those in spiral.drw. See INTERNALS
+(for x 1 10
+(draw (line 0 0 100 100))
+(color 0 1 0)
+(draw (filledcirc (* 10 x) (* 10 x) 50))
+)
+
+;here are some tests to make sure that all the draw functions work correctly
+;they should error to System.err if something is awry
+(draw (line 0 0 100 100))
+(draw (circ (* 5 x) (+ 2 x) 50))
+(draw (rect 40 50 100 75))
+(draw (filledcirc 20 30 40))
+(draw (filledrect (sin 30) (cos 40) (sqrt 50) 60))
+
+;Tests for setting color and linewidth
+(color 1 1 1)
+(color 1 0 1)
+(color .5 .5 0.5)
+(linewidth 5)
+(linewidth 6)
+
+;Testing of the shape translation
+(draw (move (line 0 0 100 100) 10 10))
+(draw (move (circ 50 50 50) 10 10))
+(draw (move (filledcirc 50 50 50) 10 10))
+(draw (move (rect 40 40 50 50) 10 10))
+(draw (move (filledrect 40 40 50 50) 10 10))
+(draw (move (group
+(line 0 0 100 100)
+(circ 50 50 50)
+(rect 40 40 50 50)
+)
+10 10))
+
+(draw (rotate (line 0 0 100 100) 10))
+(draw (rotate (circ 50 50 50) 10))
+(draw (rotate (filledcirc 50 50 50) 10))
+(draw (rotate (rect 40 40 50 50) 10))
+(draw (rotate (filledrect 40 40 50 50) 10))
+(draw (rotate (group
+(line 0 0 100 100)
+(circ 50 50 50)
+(rect 40 40 50 50)
+)
+10))
+
+(draw (scale (line 0 0 100 100) 10))
+(draw (scale (circ 50 50 50) 10))
+(draw (scale (filledcirc 50 50 50) 10))
+(draw (scale (rect 40 40 50 50) 10))
+(draw (scale (filledrect 40 40 50 50) 10))
+(draw (scale (group
+(line 0 0 100 100)
+(circ 50 50 50)
+(rect 40 40 50 50)
+)
+10))
+
+;One cool feature I implemented in my program was the ability to use assignments in expressions
+(+ (:= x 33) -32)
+(- x 3e-4)
+
+;I also did something pretty nifty with my number pattern, where it will truncate be exponents
+-3.4e-4.5 ; This runs, even though straight Double parsing it would be an error
