@@ -1,0 +1,6 @@
+join RANDOMID@localhost
+dump
+d3
+dump
+resign
+quit

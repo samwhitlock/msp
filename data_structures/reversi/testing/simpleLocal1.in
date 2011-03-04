@@ -1,0 +1,15 @@
+manual
+clear
+dump
+d3
+dump
+clear
+dump
+color white
+start
+dump
+c3
+dump
+resign
+start
+quit

@@ -1,0 +1,6 @@
+join RANDOMID@localhost
+dump
+e3
+host RANDOMID
+start
+quit

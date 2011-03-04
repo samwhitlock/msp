@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+# -*-Python-*-
+
+import os, sys
+from subprocess import Popen, PIPE
+from threading import Timer
+from resource import *
+from signal import SIGHUP
+
+def killGrp(pgid):
+    print >>sys.stderr, "Killing", pgid
+    try:
+        os.killpg(pgid, SIGHUP)
+    except:
+        print >>sys.stderr, "Kill failed"
+    
+
+cpulimit = int(sys.argv[1])
+filelimit = int(sys.argv[2])*512
+command = sys.argv[3:]
+
+setrlimit(RLIMIT_CPU, (cpulimit, cpulimit))
+setrlimit(RLIMIT_FSIZE, (filelimit, filelimit))
+
+os.setpgrp()
+pgrp = os.getpgrp()
+
+proc = Popen(command)
+
+timer = Timer(cpulimit * 2, killGrp, args = [ pgrp ])
+timer.start()
+code = proc.wait()
+timer.cancel()
+timer.join()
+
+sys.exit(code)
+

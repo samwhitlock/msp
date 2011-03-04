@@ -1,0 +1,119 @@
+              An Implementor's Guide to the Reversi Program
+                        *Sam Whitlock (cs61b-eo)*
+
+Each component of the game is housed in its own class.
+
+Enumerations
+
+PieceColor
+Each of the players are represented by an enumeration member. This
+enumeration also include empty for convenience (essentially a "null"
+type for this enumeration). Each of these enumerations has some
+convenient stuff attached to it. You can call opposite on non-EMPTY
+types to get their opposite color (useful for making moves and
+switching current players and such), get their string representation,
+and get their first character (useful for printing out the board to
+the command line and such).
+
+Command
+Because there are so few commands in this game, each type of command
+is represented by an enumeration type. This allows enum types rather
+than some sort of command objects to be passed around within the
+program, and makes SWITCH statements possible (though I ended up not
+using any). The key to this class is the parseCommand method, which
+takes an entire string of a command as well as a size-2 1D array, and
+returns the type of command and put any valid operands into this
+array. If the string is invalid, then it returns ERROR.
+
+Board Class
+This class represents a board as well as all the operations on a
+board. I have taken great care to ensure that the board class will
+reject any erroneous or illegal move so. Essentially this allows it to
+do its own parsing. Rather than having methods return void (especially
+in the pass and makeMove methods), I had them return a boolean so that
+they board could tell anything that is calling these methods on it
+whether the move it passed it was legal to do at the current state,
+rather than having to do it externally each and every time.
+The board is essentially representing by a 2D (8x8) array that
+directly represents the board. I keep adjacent data structure
+(ArrayLists of the pieces for each player) for convenience (much
+faster for determining the outcome of games and such). The key to the
+board are the methods legalMoves, which returns an ArrayList of the
+valid moves from the current board, and the methods for determining
+the legality of a move. Essentially this method is purely brute force
+in that it checks in all the possible 8 directions around a move to
+see whether it is valid. This is perfectly acceptable because the
+board has a limited and relatively small size, so even though these
+methods may look complex and rather basic, keep in mind that the board
+is really small, so each of the for loops might go through a couple
+iterations at most.
+
+Player Classes
+
+Contestant
+This is an abstract class that represents a contestant. It is extended
+by all the 3 following classes. They essential method in this class is
+the takeMove method, which makes a move for the contestant.
+
+AI
+This represents the computer opponent in the game. It basically does a
+5-level MIN-MAX tree from the entire game state, take the leaves of
+the tree, and determines which is the best state to work towards,
+backtracks to the initial move that works toward that state, and makes
+it. This AI is not foolproof, and an experienced player can easily
+overcome it because it assumes that its opponent is "greedy" in that
+it will get as many pieces as soon as possible. However, this does a
+pretty decent job. I gave it a little more variation, though: if
+several different leaves have the same board value, then I chose
+randomly from them. Before I did this, I noticed that the game would
+often work toward one corner and side of the board. This makes the AI
+slightly better, but not much. For the "value" of a board, I just made
+it the difference in number of pieces (positive or negative depending
+on which color I was calculating the board value for).
+
+Human
+Represents a user. Take move just takes input from a user from the
+getline method in the Text Controller. It is very forgiving and asks
+the user for correct input if they mess up. Pretty basica stuff.
+
+RemoteOpponent
+This class represent an opponent that is playing on the other side on
+a network connection. This class first sends the previous move to the
+opponent through the Mailbox and then waits receive the opponents move
+on its Inbox. If this move is valid, it executes it on the board. If
+it is not valid, the remote opponent resigns from the board due to the
+faulty remote player. It also handles the end-of-game and resignation
+handshakes (the sent and receipt of empty strings) so that this does
+not have to be handled elsewhere (like in the Controller and its
+process method, for instance).
+
+Controller Classes
+Controller
+Though this class is abstract, it contains the process method that
+controls the flow of the entire program. The pre-play loop in is all
+the set up stuff that goes on before a game actually starts. Once the
+start command is issued, that loop is broken out of and into the play
+loop. Once the game is ended or resigned, the play loop is broken out
+of and the end-of-game stuff is taken care of. If the quit command was
+not what was issued, the loop will continue back to the top and start
+over (starting a new game, if you will). Also in this class is the
+method for printing the board, help, and quit dialogues to the command line.
+
+Text Controller
+This class represents the interface with the user through the command
+line. It maintains a stack of inputs and reads off the top one. This
+allows for an easy implementation of the load command (which basically
+just pushes a reader onto the top of the stack). They key to this
+class, though, is the getLine method, which prompts a user for a
+command at standard input and truncates off comments. It will also
+throw away empty lines. Putting all the parsing difficulty in here
+helps a lot in the Controller class, because call getLine returns the
+next valid String with no difficulty anywhere else in the program.
+
+Misc. Classes
+Position
+This is essentially a wrapper class for a 2D array that represent a
+position on a board. I wrote this class so that I could override the
+equals method so that it would compare 2 Position objects based on the
+array values. I only really use this in the whitepieces and
+blackpieces ArrayLists in the Board class

@@ -1,0 +1,6 @@
+host RANDOMID
+d3
+start
+resign
+join RANDOMID@localhost
+quit

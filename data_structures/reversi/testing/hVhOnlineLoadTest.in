@@ -1,0 +1,4 @@
+host RANDOMID
+load testing/boardfilled.test
+start
+quit

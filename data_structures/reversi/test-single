@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+
+import os, sys, re
+from getopt import getopt
+from threading import Timer
+from testutil import *
+
+cpuLimit = 30
+filesizeLimit = 500
+user = 'java reversi'
+
+try:
+    opts, files = getopt (sys.argv[1:], '', ('user=', 'time=', 'filesize='))
+    for opt, val in opts:
+        if opt == '--time':
+            cpuLimit = int(val)
+        elif opt == '--filesize':
+            filesizeLimit = int(val)
+        elif opt == '--user':
+            user = val
+except:
+    print >>sys.stderr, "Usage: test-single [--user=PROG] [--time=SEC] [--filesize=KBYTES] TEST.in..."
+    sys.exit(1)
+
+
+os.environ['PATH'] = os.path.dirname(sys.argv[0]) + ":" + os.environ['PATH']
+
+failed = 0
+errors = 0
+
+for infile in files:
+    root = os.path.splitext(infile)[0]
+    name = os.path.basename(root)
+    limits = contents (root + ".lim")
+    tlimit = getLimit(limits, 'time', cpuLimit)
+    flimit = getLimit(limits, 'filesize', filesizeLimit)
+    input = safeOpen(infile)
+    if not input:
+        print "%s: ERROR (input file not found)" % name
+        errors += 1
+        continue
+    proc = LimitedPopen(user, cpulimit=tlimit, filesizelimit=flimit,
+                        stdin=input)
+    timeoutFlag = [False]
+    timer = Timer(cpuLimit * 1.5, killProcs, args = [timeoutFlag, proc])
+    timer.start()
+    out, errout = proc.communicate(None)
+    timer.cancel()
+    safeClose(input)
+
+    if timeoutFlag[0]:
+        print "%s: FAIL (hung)" % name
+        failed += 1
+        continue
+    if proc.returncode in (-24, -30):
+        print "%s: FAIL (CPU time)" % name
+        failed += 1
+        continue
+    if proc.returncode != 0 or re.search(r'Exception in thread', errout):
+        print "%s: FAIL (execution)" % name
+        failed += 1
+        continue
+    raw = contents(root + ".out")
+    if raw is not None:
+        if raw != out:
+            print "%s: FAIL (output)" % name
+            failed += 1
+        continue
+    filtered = extractStdSpec(contents(root + ".flt"))
+    if filtered is None:
+        print "%s: ERROR (no standard)" % name
+        errors += 1
+    elif out is None or (filtered != extractSpec(out)
+                         and filtered != modWinner(extractSpec(out))):
+        print "%s: FAIL (output)" % name
+        failed += 1
+    else:
+        print "%s: PASS" % name
+
+print
+if errors:
+    print "Passed %d out of %d, %d failures, %d test errors" \
+          % (len(files)-failed-errors, len(files), failed, errors)
+else:
+    print "Passed %d out of %d, %d failures" \
+          % (len(files)-failed, len(files), failed)
+
+sys.exit(1 if errors or failed else 0)

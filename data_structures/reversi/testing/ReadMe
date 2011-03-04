@@ -1,0 +1,37 @@
+The tests here are of two types: those that run one instance of the program,
+and those that run two instances that play each other. 
+
+The test-single script takes a list of files of the form NAME.in, and
+for each of them, runs 'java reversi' in this directory, using the
+contents of the file as the standard input, saving the standard output
+and error.  It reports failure if there is any output to the standard
+error, if the program terminates with a non-zero exit code, or if it
+times out.  Otherwise, if there is a file NAME.out, it is compared
+literally with the program's output.  If instead there is a file named
+NAME0.flt, then it is filtered to remove everything except those
+outputs that the spec requires ("Red wins.", "Blue wins.", "Draw.",
+and dumps of the board between "===" marks) and compared with the
+program output, similarly stripped.
+
+The test-double script takes a list of files of the form NAME.in, and
+for each of them, runs two java reversi processes simultaneously,
+feeding one of them the file NAME.in and the other the file NAME-vis.in.
+There is a pause between starting the first and second
+program, which gives the first time to execute a "host" command.  The
+output of the two programs is then compared with NAME.out or NAME.flt,
+NAME-vis.out or NAME-vis.flt as in the first case.  To avoid
+interference with other programs, any occurrence of the literal symbol
+"RANDOMID" (without quotes) is replaced by a symbol that is likely to be&
+unique.  Generally, you should use "localhost" as the host name.
+
+For both of these scripts, if a file NAME.lim is present, it is checked 
+for lines of the form "time = N" or "filesize = N", which, if present, set
+the maximum CPU time (in seconds) and total output (in 512-byte blocks).  
+The options --time=N and --filesize=N set the defaults (otherwise 30 and 500,
+respectively).  The programs also limit the wall-clock time used by a
+game to either 1.5 times the CPU limit for test-single, or 2.5 times the
+CPU limit for test-double.
+
+Naturally, for tests to be useful, you'll have to be careful to make things
+deterministic, using the 'seed' command if necessary.
+

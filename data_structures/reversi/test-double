@@ -1,0 +1,167 @@
+#!/usr/bin/env python
+
+import re, os, sys
+from getopt import getopt
+from subprocess import PIPE
+from threading import Timer, Thread
+from testutil import *
+
+def waitOnGame (proc, otherProc, input, output):
+    out, err = proc.communicate (input)
+    output[0:] = proc.returncode, out, err
+    sleep(2)
+    safeKill(otherProc)
+
+cpuLimit = 30
+filesizeLimit = 500
+user = "java reversi"
+opponent = "java reversi"
+randomId = "GAME" + str(os.getpid())
+verbose = False
+outdir = None
+
+os.environ['PATH'] = os.path.dirname(sys.argv[0]) + ":" + os.environ['PATH']
+
+try:
+    opts, files = getopt (sys.argv[1:], 'v',
+                          ( 'time=', 'filesize=', 'opponent=', 'user=',
+                            'verbose', 'outdir=', 'randomid='))
+    for opt, val in opts:
+        if opt == '--time':
+            cpuLimit = int(val)
+        elif opt == '--filesize':
+            filesizeLimit = int(val)
+	elif opt == '--opponent':
+	    opponent = val
+	elif opt == '--user':
+	    user = val
+        elif opt == '--verbose' or opt == '-v':
+            verbose = True
+        elif opt == '--outdir':
+            outdir = val
+        elif opt == '--randomid':
+            randomId = val
+except:
+    print >>sys.stderr, (
+	"Usage: test-double [-v | --verbose] [--time=SEC] [--filesize=BLOCKS]\\\n"
+	"                   [--user=PROG] [--opponent=PROG] TEST.in...")
+    sys.exit(1)
+
+
+failed = 0
+errors = 0
+
+for infile in files:
+    root, ext = os.path.splitext(infile)
+    name = os.path.basename(root)
+    limits = contents (root + ".lim")
+    tlimit = getLimit(limits, 'time', cpuLimit)
+    flimit = getLimit(limits, 'filesize', filesizeLimit)
+
+    input = contents(infile)
+    visitorInput = contents(root + "-vis" + ext)
+    if not input:
+        print "%s: ERROR (input file not found)" % name
+        errors += 1
+        continue
+    if not visitorInput:
+        print "%s: ERROR (visitor input file not found)" % name
+        errors += 1
+        continue
+
+    input = re.sub(r'\bRANDOMID\b', randomId, input)
+    visitorInput = re.sub(r'\bRANDOMID\b', randomId, visitorInput)
+
+    proc1 = LimitedPopen(user, cpulimit=tlimit, filesizelimit=flimit,
+                         stdinput=input)
+    
+    sleep(3)
+
+    proc2 = LimitedPopen(opponent, cpulimit=tlimit, filesizelimit=flimit,
+                         stdinput=visitorInput)
+
+    hostOut = []
+    hostThread = Thread(target=waitOnGame, name="Host",
+                        args=(proc1, proc2, input, hostOut))
+    hostThread.start()
+ 
+    visitorOut = []
+    visitorThread = Thread(target=waitOnGame, name="Visitor",
+                           args=(proc2, proc1, visitorInput, visitorOut))
+    visitorThread.start()
+    
+#    timeoutFlag = [False]
+#    timer = Timer(cpuLimit * 2.5, killProcs, args = [timeoutFlag, proc1, proc2])
+#    timer.start()
+    hostThread.join()
+    visitorThread.join()
+#    timer.cancel()
+
+    if verbose:
+        if len(hostOut) == 3:
+            print >>sys.stderr, "Host:\nExit code: %d\nOut:\n%s\nErr:\n%s\n" \
+                  % tuple (hostOut)
+            print >>sys.stderr, "-" * 72
+        if len(visitorOut) == 3:
+            print >>sys.stderr, "Visitor:\nExit code: %d\nOut:\n%s\nErr:\n%s\n"\
+                  % tuple (visitorOut)
+            print >>sys.stderr, "-" * 72
+
+    if (hostOut and hostOut[0] == -1) or (visitorOut and visitorOut[0] == -1):
+        print "%s: FAIL (hung)" % name
+        failed += 1
+        continue
+    for prog, proc, std, (rc, out, errout) in (
+            ('host', proc1, root, hostOut),
+            ('visitor', proc2, root+'-vis', visitorOut)):
+        
+        if proc.returncode in (-24, -30):
+            print "%s: FAIL (%s CPU time)" % (name, prog)
+            failed += 1
+            break
+        if proc.returncode != 0 or re.search(r'Exception in thread', errout):
+            print "%s: FAIL (%s execution)" % (name, prog)
+            failed += 1
+            break
+
+        if not outdir:
+            raw = contents(std + ".out")
+            if raw is not None:
+                if raw != out:
+                    print "%s: FAIL (%s output)" % (name, prog)
+                    failed += 1
+                    break
+                continue
+
+            filtered = extractStdSpec(contents(std + ".flt"))
+            if filtered is None:
+                print "%s: ERROR (no standard for %s)" % (name, prog)
+                errors += 1
+                break
+            elif out is None or (filtered != extractSpec(out)
+                                 and filtered != modWinner(extractSpec(out))):
+                print "%s: FAIL (%s output)" % (name, prog)
+                failed += 1
+                break
+    else:
+        print "%s: PASS" % name        
+        if outdir:
+            outfile = open(os.path.join(outdir, name + '.flt'), "w")
+            outfile.write(hostOut[1])
+            outfile.close()
+            outfile = open(os.path.join(outdir, name + "-vis.flt"), "w")
+            outfile.write(visitorOut[1])
+            outfile.close ()
+
+print
+if errors:
+    print "Passed %d out of %d, %d failures, %d test errors" \
+          % (len(files)-failed-errors, len(files), failed, errors)
+else:
+    print "Passed %d out of %d, %d failures" \
+          % (len(files)-failed, len(files), failed)
+
+sys.exit(1 if errors or failed else 0)
+
+
+

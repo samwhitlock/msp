@@ -1,0 +1,82 @@
+		  Reversi: Users' Guide and Reference
+
+			   *Sam Whitock (cs61b-eo)*
+
+Reversi is a relatively simple game that has been played for thousands
+of years. Also known as Othello, the objective of this game is to
+surround opponent's pieces, and in doing so convert them to your
+color, within the legal moves. The player with the most pieces on the
+board at the end of the game wins.
+
+Gameplay
+Play alternates between players, with black going first. Each move
+consists of placing a piece of one's own color on an empty square so
+that there is a piece of the same color on the same row, column, or diagonal separated
+from the empty square by one or more squares that are all filled with enemy pieces (which
+we'll say are then surrounded). After making such a move to an empty square, all newly
+surrounded enemy pieces (there must be at least one) reverse their color (these reversals of
+color, however, do not cause any other pieces to become surrounded). If no such move is
+possible, the player passes. When both players must pass in succession, the game ends and
+the player with the most pieces on the board wins.
+
+Commands
+
+Program control
+quit : Exit the game
+load : load the contents of a file into the game
+dump : prints the state of the current board to standard output
+help : prints a message showing all available commands
+
+Game Setup
+clear : clear the board to the initial setup
+start : start the game
+auto : set the user as AI
+manual : set the user as "manual" (i.e. the user can input commands)
+color black OR color white : change your color of pieces
+seed N : seed the random number generator (N is an integer)
+join ID@HOST : ID is any sequence of letters, underscores, and digits,
+and HOST is an internet address. This will join a hosted game (if it
+exists) on the HOST computer with that is represented by ID.
+host ID : ID is any sequence of letters, underscores, and digits. This
+will start a network game which any user can join by the join command
+
+Gameplay
+resign : resign from the current game (does not quit the program)
+CR : this represents a piecemove where C is the column (a-h) and R is
+the row (1-8)
+- : represents a passing move. You may only input a passing move if
+the game is not over and you cannot make a valid move from your
+current game state (but your opponent still can).
+
+Advice for Networking
+Due to the fact that networking tends to be finicky and ports can be
+closed or open and it is difficult to tell if they are or not, the
+easiest way to networkin is to use the HOST localhost.
+
+Also, if you are playing on a host or with a client, a prompt will be
+displayed only when it is your move. That is, when there is no prompt
+your opponent in the process of making their move. When a client
+initially connects, they must wait for the host to configure and then
+start the game to receive a prompt. The program is designed so that if
+either the host or the client disconnects or quits, the other
+connected program will not automatically terminate (unless the error
+is fatal, which it isn't).
+
+As you progress through the game, if you are playing an AI opponent
+(especially if you are playing on a networked game), you may notice
+some significant lag time. This is because it becomes more and more
+computationally difficult for the AI to makes it move because as the
+game progresses there are more and more outcomes to consider. Please
+be patient. This AI does not fail and does not make illegal moves, so
+just let it do it's thing!
+
+Game Configurations
+
+Local
+AI vs. AI
+Human vs. AI
+
+Networked
+AI vs. AI
+Human vs. AI
+Human vs. Human

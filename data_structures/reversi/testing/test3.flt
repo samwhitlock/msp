@@ -1,0 +1,82 @@
+This file is also basically for checking illegal moves and such.
+
+> > > ===
+  - - - - - - - -
+  - - - - - - - -
+  - - - - - - - -
+  - - - w b - - -
+  - - - b w - - -
+  - - - - - - - -
+  - - - - - - - -
+  - - - - - - - -
+User: black
+Moves: 0
+===
+> Error: illegal move: a1
+> Error: illegal move: b1
+> Error: illegal move: c1
+> Error: illegal move: d1
+> Error: illegal move: e1
+> Error: illegal move: f1
+> Error: illegal move: g1
+> Error: illegal move: h1
+> Error: illegal move: a2
+> Error: illegal move: b2
+> Error: illegal move: c2
+> Error: illegal move: d2
+> Error: illegal move: e2
+> Error: illegal move: f2
+> Error: illegal move: g2
+> Error: illegal move: h2
+> Error: illegal move: a3
+> Error: illegal move: b3
+> Error: illegal move: c3
+> > > > Error: illegal move: g3
+> Error: illegal move: h3
+> Error: illegal move: a4
+> Error: illegal move: b4
+> Error: illegal move: c4
+> Error: illegal move: f4
+> Error: illegal move: g4
+> Error: illegal move: h4
+> Error: illegal move: a5
+> Error: illegal move: b5
+> > Error: illegal move: f5
+> Error: illegal move: g5
+> Error: illegal move: h5
+> Error: illegal move: a6
+> > Error: illegal move: c6
+> Error: illegal move: d6
+> Error: illegal move: e6
+> Error: illegal move: f6
+> Error: illegal move: g6
+> Error: illegal move: h6
+> Error: illegal move: a7
+> Error: illegal move: b7
+> Error: illegal move: c7
+> Error: illegal move: d7
+> Error: illegal move: e7
+> Error: illegal move: f7
+> Error: illegal move: g7
+> Error: illegal move: h7
+> Error: illegal move: a8
+> Error: illegal move: b8
+> Error: illegal move: c8
+> Error: illegal move: d8
+> Error: illegal move: e8
+> Error: illegal move: f8
+> Error: illegal move: g8
+> Error: illegal move: h8
+> ===
+  - - - - - - - -
+  - - - - - - - -
+  - - - b b b - -
+  - - - b b - - -
+  - - b w w - - -
+  - b - - - - - -
+  - - - - - - - -
+  - - - - - - - -
+User: black
+Moves: 5
+===
+> 

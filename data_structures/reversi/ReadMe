@@ -1,0 +1,107 @@
+This directory contains a skeleton for CS61B Project 3.
+
+IMPORTANT: This is a new, experimental project, so expect updates.
+Here's how to merge changes in our files into your files with a
+minimum of fuss:
+
+    1. Commit all the current changes in your working directory with
+       svn commit (check you've gotten everything with 'svn status').
+    2. Use 'svn update' to get everything synchronized with the repository.
+    3. Look in the file PUBLIC-VERSION.  Let's assume it contains `proj3-N'.
+    4. Execute the command
+    
+           svn merge $STAFFREPOS/tags/proj3-n $STAFFREPOS/proj3 DIR
+	
+       where DIR is your proj3 working directory (just a plain '.' if you
+       are already in that directory).
+    5. If there are conflicts introduced (places where we've both changed
+       something), which you can tell from the messages from svn merge,
+       correct them with your editor (be sure to save the files when done!),
+       and then tell svn you've resolved the conflict with
+       	   svn resolved FILE
+       or the alternative, more modern, command:
+           svn resolve --accept=working FILE
+       where FILE is the name of the relevant file.
+    6. Now commit your working directory.
+
+Although some of what's in here might seem mysterious to you, try to 
+understand what it's all for.  Don't be afraid to ask us about it.
+
+CONTENTS:
+
+ReadMe			This file.
+	
+Makefile		A makefile (for gmake) that will compile your
+			files and run tests.  You must turn in a Makefile,
+			'gmake ' must compile all your files, and 
+			'gmake check' must perform all your tests.  
+			Currently, this makefile is set up to do just 
+			that with our skeleton files.  Be sure to keep 
+			it up to date.
+
+reversi.java		The top-level main program (just calls the real
+			main program).
+
+User-Manual		Description of the program for one of its users.
+
+INTERNALS		Overview of the "guts" of your program: what's in
+			it, and what it does. Used by anyone who wants to
+			enhance or maintain your program, as opposed to 
+			simply using it.
+
+limited-exec		Auxiliary program for testing that prevents runaway
+			programs.
+test-single		Test reversi program with no remote opponent.
+test-double		Test two reversi programs playing each other.
+testutil.py		Various common utility programs used for testing.
+
+In package reversigame
+   Main.java            The main program for this package.
+
+   PieceColor.java      An enumeration type representing contents of squares.
+
+   Board.java		Skeleton for a class representing the reversi board
+			(the "model").
+ 
+   Command.java         Skeleton for a class that parses commands.
+
+   Contestant.java	The abstract class representing some kind of player. 
+
+   AI.java		An extension of Contestant that represents an AI
+			(artificial intelligence)---that is, an automated 
+			player.
+
+   Human.java	        An extension of Contestant that represents a human.
+
+   RemoteOpponent.java  An extension of Contestant that gets moves by
+   			communicating with another program.
+
+   Controller.java      The main logic for controlling a game.
+
+   TextController.java  Standard extension of Controller for input from
+   			keyboard.
+
+   GUIController.java   (Extra credit) A kind of Controller that interfaces
+	                the user through a GUI.
+
+   Testing.java         Contains code for running unit tests.
+
+In directory testing (see also testing/README).
+   test1_N.in	        Input files for single-program tests.
+   test1_N.out, test1_N.flt
+			Expected output from single-program tests.
+
+   test2_N.in, test2_N-vis.in
+			Input files for two-program tests.
+   test2_N.out, test2_N.flt
+   test2_N-vis.out  test2_N-vis.flt
+			Expected output from two-program tests.
+
+You can change ANYTHING as long as you conform to the spec.
+However, as usual, DON'T change or bypass things you don't
+understand.  Understand them first, THEN change if desired.
+
+Extra credit (5 points).  Fill in GUIUser.java to give an alternative,
+graphical interface.  Your program MUST still work correctly without the
+--display option.
+

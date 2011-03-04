@@ -1,0 +1,4 @@
+auto
+load testing/boardfilled.test
+start
+quit
