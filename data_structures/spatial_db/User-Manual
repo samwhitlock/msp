@@ -1,0 +1,125 @@
+                  The Track Particle Tracking System
+                      Users' Guide and Reference
+
+                           Sam Whitlock (cs61b-eo)
+
+This system is used to simulate collisions in a 2-dimensional
+space. With this, you can add points with unique integers IDs and
+simulate their interactions (i.e. collisions) with walls and other
+particles over time. The frame of reference that these objects live in
+is a rectangle (of which you specify the size) and they all have a
+radius (which, again, you specify).
+
+The physics of this program are ideal. You can picture them like
+billiard balls. That is, collisions are completely elastic and the
+balls have no tendency to stick to each and are smooth (in other
+words, all these interactions take place in an ideal physics world).
+
+How to start the program
+
+The main program you will write is called track. You invoke it from a
+command line like this (things in square braces are optional):
+java track [ --debug=N ] [ INPUTFILE [ OUTPUTFILE ] ]
+
+This runs the program taking input from the file INPUTFILE, or, if
+this is defaulted, from the standard input, writing the results to
+OUTPUTFILE, or if that is defaulted, to the standard output. The
+--debug switch, if present, turns on any diagnostic printing you want
+to do.
+
+Debug Options
+
+How to set: Replace N in the above instantiation structure with either
+0 or 1.
+
+Option 0: This is redundant. That is, it is the same as if you didn't
+set any debug option at all. No printing will occur is option 0 is set.
+
+Option 1: The program will operate the same as option 0, except that
+when errors occur, the system will print an error message to give more
+information about what the error was. Underlying operations will be
+the same, but you will receive more information when you make a mistake.
+
+
+Commands
+
+Input parsing: Commands are delimitied by newlines and
+semicolons. Anything after a # symbol on any given line will be thrown
+out because it is considered to be a comment. The input parser is
+pretty good at understanding what you want to input, but the more you
+try to stay reasonable, the better.
+
+You may use the prefix of any command in leu of typing it
+fully. Because they are all alphabetically distinct from the first
+letter of each command, you may, if you so choose, just use each letter.
+
+
+bounds xLow yLow xHigh yHigh
+
+Set the positions of the four walls that enclose the objects to be
+tracked by specifying the lower-left and upper-right corners of a
+rectangle aligned with the x and y coordinate axes. Initially, the
+bounds are (0, 0) and (0, 0) (a box with no area). For simplicity, the
+walls may only be moved outward.
+
+rad r
+Set the radii of all the objects being tracked to r. Initially, all
+have infinite radius, so that they will not fit in any set of
+walls. Thus, you must use this command before doing any adds. For
+simplicity, it is illegal to increase the radius.
+
+add ID x y xVelocity yVelocity
+Add a new ball whose center is initially at position (x,y) and move
+with the specified velocity. The ID must be a non-negative integer and
+each object must havfe a unique ID. It is an error to at balls outside
+the specified bounds, within 2 times the radius of each other, or
+closer to any given wall than the radius.
+
+load filename
+Read commands from the file specified by the filename. They are
+executed as if they had been written from the standard input of the
+program. The filename must have all non-whitespace
+characters. Commands and comments may not be split between the two
+files.
+
+write filename
+Writes the current state of the system to a file. A bounds and rad
+command are at the top and a sequence of add commands (1 per line) are
+used to represent the current state of the system. The purpose of this
+is so that the system may be saved and recreated later, or analyzed.
+
+near _ _ d
+Print the positions and velocities of all objects whose centers are
+within distance d of (x, y). Prints two points per line (except
+possibly the last line) in the format ID:(x, y, vx, vy), separated by
+white space, ordered by ascending ID. The values of the positions and
+the velocities are represented to 4 significant figures.
+The following combination are possible to the blank spaces (in
+respective order):
+
+x *: The bounds to look in are centered at the x position and span the
+y direction.
+
+* y: The bounds to look in are centered at the y position and span the
+  x direction
+
+x y: The bounds to look at are specified by a circle of radius d
+centered at the point (x,y)
+
+
+closer-than d
+Prints all pairs of distinct objects whose centers are within d
+distance of each other in the format
+ID1:(x1,y1,vx1,vy1) ID2:(x2,y2,vx1,vy1)
+
+Where ID1 < ID2. One pair is printed per line of standard output, and
+the positions and velocities are printed to 4 significant digits.
+
+simulate t
+Simulates the interactions of all particles with each other and the
+bounds of the system with perfect elastic collisions for t time (where
+t >= 0). This command does not print anything.
+
+help: Aids the user in operating the program.
+
+quit: Exits the program with no further output

@@ -1,0 +1,12 @@
+#2 points just colliding with each other straight on
+
+bounds 0 0 10 10 ; rad 1
+add 1 3 5 3 0 ; #COMMENT JUNK TEST
+add 2 7 5 -4 0 ; ; ; ; ; ; ; #all these blank things should produce empty commands (ignored in my util)
+ 	 	 		 simulate 3 ; #####
+ 
+ near  	 		 5 	 		 5 	  	10 ####:::::::
+ 
+quit #ANOTHER cRazY Comment
+
+this bad stuff should never be reached so whatever!

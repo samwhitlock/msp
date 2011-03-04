@@ -1,0 +1,9 @@
+#Testing the load command
+
+bounds 0 0 100 98
+
+load test8loadFile
+
+simulate 23.2412
+near 0 4 125667
+quit

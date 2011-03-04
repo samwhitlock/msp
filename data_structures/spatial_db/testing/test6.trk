@@ -1,0 +1,6 @@
+#Point bouncing into the corner
+
+bounds 0 0 11 11 ; rad 1
+add 1 9 9 7 7 ; simu 4 ; near 0 0 1000 ;
+quit;#COMMENTO
+this should be ignored ever though it would error normally

@@ -1,0 +1,15 @@
+#one point just bouncing around
+
+bounds 0 0 100 100 ; rad 1
+
+add 15 9 1 -3 4
+
+simulate 300
+
+near 0 0 100
+
+simulate 114.13463
+
+near 0 0 100;#this is a comment
+
+quit

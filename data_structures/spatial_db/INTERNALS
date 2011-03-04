@@ -1,0 +1,99 @@
+              An Implementor's Guide to the Track System
+                        Sam Whitlock (cs61b-eo)
+
+Tracker Package
+
+This package interacts with the public interface of Util. In my
+implementation, I choose to extend QuadTree.QuadPoint from the Util
+package to represent points with velocities. Here is an overview of
+what each of my classes within this package represent. Please see the
+documentation in the source code for further information about each
+method and class, etc.
+
+QPoint
+This point inherits from QuadTree.QuadPoint. It essentially functions
+the same of QuadPoint except that I added a velocity to each
+point. I chose to have it implement Comparable so that I could use
+compareTo to order thing in lists for printing (it compares them by
+their integer ID). I also overrode this so I could attach and integer
+ID to each point. I overrode the equals method so that objects could
+be considered equal if all of their members are equal. This is useful
+for comparing points to see if they are already in a certain data
+structure or not (the pointer test of equals is still used).
+
+Parser
+This class handles the parsing and execution of my commands. The input
+is parsed (with the help of Main) line-by-line. Comments throw away
+the end of the string and each thing in the line is delimited by
+whitespace. Newline characters and semicolons delimit the end of
+commands. The process method essentially just calls the appropriate
+method in the Command class to execute the inputted command.
+
+Main
+This class is what is used to launch the program and specify the
+debugging options. The stacks of scanners is used so that the load
+command may push new input onto the scanner. The boolean print prompt
+is used to determine when a prompt should be printed, if at all.
+
+Debug
+This class handles the printing of error messages, depending on the
+debug option.
+
+Command
+This class is essentially what interacts with the quadtree (Util
+package) data structure. It takes the string arrays that are parsed
+and sent from the Parser class, extracts the appropriate information
+and executes the given commands on the quadtree. I chose to make
+everything static for simplicity. Basically, I didn't want to have to
+instantiate just one Command object and keep it in main. It seemed
+more logical this way. For details on each command, please see the
+documentation in the class's source code.
+
+Util Package
+
+This package is used to represent QuadTrees. Following this is an
+overview of my classes in this package and what they are used to
+represent. Please see the documentation in the source code for further
+information about each method and class, etc.
+
+Debugging
+This is class that handles the error output and debugging based on the
+debugging option set in the tracker package that is interfacing with
+this package. It prints prompts according to the specifications
+outlined in User-Manual.
+
+Leaf
+This is essentially a wrapper class for a subtype of QuadPoint that
+lives in the tree. The purpose of doing this instead of just using
+QuadPoint as leaves is so that the tree can be recursed from the
+bottom up for certain commands, such as moving a point or removing a point.
+
+LeafNode
+This is a node that only contains leaves (i.e. it lives at most 1
+level from the bottom of the tree). This represents a bounded region
+in which max_children points may live (I chose 10, but you may change
+that and recompile it to change the efficiency and speed of the
+program). It inherits from QuadTreeNode so that things like the center
+and bounds of the region it spans need not be duplicated in function.
+
+QuadTreeNode
+This is a node that just has non-leaf children. I represent it by
+having each of the possibly 4 children of this node by either another
+QuadTreeNode or a LeafNode. This node must reside at least 2 levels
+from the bottom of any given tree.
+
+QuadTree
+This is similar to a binary tree, except instead of 2 options, it has
+4, one for each region NW, NE, SW, and SE of its center point. These
+are represented by QuadTreeNodes (or LeafNodes) and this class
+contains the public interface to the util package that has to do with
+representing and manipulating points. This class is quite complex, so
+please refer to the documentation in the source code for more
+information.
+
+COOL FEATURE IN UTIL
+When a leaf is moved or removed from the tree, a bottom-up procedure
+is used to keep the tree optimized by not having empty QuadTreeNodes
+and LeafNodes all over the place. This is useful because then these
+many optimizations need not recurse the tree to find the appropriate
+item to move or remove.

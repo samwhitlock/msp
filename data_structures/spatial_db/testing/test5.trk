@@ -1,0 +1,7 @@
+#multiple points colliding at the same time
+
+bounds 0 0 10 10 ; rad 1
+add 1 2 5 7 0 ; add 2 8 5 0 -7; add 3 5 2 7 0; add 4 5 8 0 -7 ; #####WHAT IS THIS!?!?!?!
+  	 		 	 simulate 	 	 		 1.13 ; ;
+  	 	 near  	 	0 	 	 0 	 	10000 ;;;
+  	 	 quit

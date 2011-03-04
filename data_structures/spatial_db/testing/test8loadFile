@@ -1,0 +1,8 @@
+#This is the load file for test8.trk
+
+rad 1
+add 1 97 15 -8 15;
+add 2  64 12 71 -5;
+add 3 22 34 -7 14;
+add 4 47 77 33 11;
+add 5 11 22 33 44;

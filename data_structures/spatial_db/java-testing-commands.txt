@@ -1,0 +1,9 @@
+;; This buffer is for notes you don't want to save, and for Lisp evaluation.
+;; If you want to create a file, visit that file with C-x C-f,
+;; then enter the text in that file's own buffer.
+
+constructing my command
+
+java -classpath /home/ff/cs61b/lib/ucb-f2007.jar:/home/ff/cs61b/lib/ucb.jar:/home/ff/cs61b/lib/proj2-tracker.jar:/home/ff/cs61b/lib/proj2-util.jar track
+
+put colons between each file path

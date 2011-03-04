@@ -1,0 +1,71 @@
+This directory contains a skeleton for CS61B Project 2.
+
+Although some of what's in here might seem mysterious to you, try to
+understand what it's all for.  Don't be afraid to ask us about it.
+
+CONTENTS:
+
+ReadMe                  This file.
+
+track.java              A skeleton for the main program.  All this does is
+                        to call the real main program in the tracker.Main
+                        class.
+
+User-Manual             Description of the program for one of its users.
+
+INTERNALS               Overview of the "guts" of your program: what's in
+                        it, and what it does. Used by anyone who wants to
+                        enhance or maintain your program, as opposed to
+                        simply using it.
+
+Makefile                For you Unix users: this provides some simple
+                        compilation and testing support: make to compile,
+                        make clean to remove reproducible files, make check
+                        to compile and run Junit tests.
+
+The util package (directory util):
+
+  Set2D.java              The API for your set-of-particles class.  Don't
+                          change.
+
+  SimpleSet2D.java        An example of an implementation of Set2D that allows
+                          unbounded sets.
+
+  QuadTree.java           The skeleton for your quadtree implementation.
+                          Don't add any public or protected methods 
+                          or constructors.  Otherwise, change at will.
+
+  QuadTreeNode.java       Skeleton used by QuadTree for the actual
+                          tree structure.  Change or discard at will.
+
+  Testing.java            Skeleton JUnit tests for the util package.
+                          Change at will.
+
+  Debugging.java          Utility file for managing debugging output.
+
+
+  Makefile                Refers to Makefile in outer directory.
+
+The tracker package (directory tracker):
+
+  Main.java               Skeleton for the real main program.  We put it in a
+                          package like this to keep as little public as
+                          needed.
+
+  ProblemException.java   A useful checked exception you might want to use
+                          for indicating errors.
+
+  Testing.java            Skeleton for JUnit testing of the tracker package.
+
+  Makefile                Refers to Makefile in outer directory.
+
+The testing directory
+
+  test0.trk, test1.trk    Input files for regression testing.  REMINDER: 
+  	     		  These are samples only.  They DON'T
+                          constitute adequate testing.
+
+  test0.std, test1.std    Output that is supposed to result from test*.trk.
+                          You may have to modify to conform to choices
+                          you make in the order in which you output results
+                          of some commands.
